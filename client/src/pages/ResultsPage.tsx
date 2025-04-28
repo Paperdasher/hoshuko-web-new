@@ -1,12 +1,25 @@
-import * as React from 'react';
+import Confetti from 'react-confetti';
+import { useEffect, useState } from 'react';
+import ElectionPieChart from '../components/ElectionPieChart';
 
-function ResultsPage() {
+const ResultsPage = () => {
+  const [showConfetti, setShowConfetti] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000); // 5 seconds of confetti 🎉
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-4">Election Results</h1>
-      <p className="text-gray-500">Results and pie charts here!</p>
+    <div className="p-8">
+      {showConfetti && <Confetti />}
+      <h1 className="text-3xl font-bold mb-6">Election Results</h1>
+
+      <ElectionPieChart /> {/* Pie chart component for votes */}
     </div>
   );
-}
+};
 
 export default ResultsPage;
