@@ -1,48 +1,51 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import axios from 'axios';
+import { createContext, useContext, useState, ReactNode } from 'react';
+import axios from 'axios'; // if you're using axios
 
+// --- TYPES
 interface User {
   id: string;
   name: string;
+  furigana: string;
+  romajiName: string;
+  email: string;
   role: string;
-  // Add other fields you need (email, etc.)
 }
 
 interface AuthContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>; // 👈 ADD logout type
 }
 
+// --- CONTEXT
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// --- PROVIDER
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    // Try auto-login on app start
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get('/api/auth/me'); // Endpoint to get current user
-        setUser(res.data);
-      } catch (err) {
-        setUser(null);
-      }
-    };
+  const login = async (email: string, password: string) => {
+    // login logic
+    const res = await axios.post('/api/auth/login', { email, password });
+    setUser(res.data.user);
+  };
 
-    fetchUser();
-  }, []);
+  const logout = async () => {
+    // logout logic
+    await axios.post('/api/auth/logout');
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// --- HOOK
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used inside an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used inside AuthProvider');
   return context;
 };
