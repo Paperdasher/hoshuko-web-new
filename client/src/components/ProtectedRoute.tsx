@@ -1,9 +1,10 @@
+import { JSX } from 'react'; 
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // Adjust path based on your project
 
 interface ProtectedRouteProps {
   children: JSX.Element;
-  adminOnly?: boolean; // 👈 tell TypeScript about adminOnly
+  adminOnly?: boolean;
 }
 
 const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
