@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import { Toaster } from 'react-hot-toast';
 
 import HomePage from './pages/HomePage';
+import LoginPage from './pages/Login';
 import AboutPage from './pages/AboutPage';
 import PostsPage from './pages/PostsPage';
 import MinutesPage from './pages/MinutesPage';
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/minutes" element={<MinutesPage />} />
         <Route path="/student-gov" element={<StudentGovPortal />} />
