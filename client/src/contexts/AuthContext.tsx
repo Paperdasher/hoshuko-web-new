@@ -4,12 +4,16 @@ import axios from 'axios'; // if you're using axios
 // --- TYPES
 interface User {
   id: string;
+  studentId: string;
   name: string;
   furigana: string;
   romajiName: string;
+  grade: string;
   email: string;
-  role: string;
+  position: string | null;  
+  isAdmin: boolean;         
 }
+
 
 interface AuthContextType {
   user: User | null;
