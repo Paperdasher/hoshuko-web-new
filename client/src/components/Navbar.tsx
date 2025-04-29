@@ -1,10 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom'; // 👈 import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate(); // 👈 initialize navigate
+  const navigate = useNavigate(); 
 
 
 
