@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { Toaster } from 'react-hot-toast';
 
@@ -22,8 +22,8 @@ import ResultsPage from './pages/ResultsPage';
 
 function App() {
   return (
-    <Router>
-      <Toaster position="top-center"/>
+    <>
+      <Toaster position="top-center" />
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -44,8 +44,7 @@ function App() {
         <Route path="/elections/vote" element={<VotingPage />} />
         <Route path="/elections/results" element={<ResultsPage />} />
       </Routes>
-    </Router>
-
+    </>
   );
 }
 
