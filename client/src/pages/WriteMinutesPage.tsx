@@ -1,18 +1,39 @@
-import * as React from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
-function WriteMinutesPage() {
+export default function WriteMinutesPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [minutesText, setMinutesText] = useState('');
+
+  useEffect(() => {
+    if (!user || user.position !== 'Secretary') {
+      toast.error('Access restricted to Secretary.');
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await axios.post('/api/minutes', { content: minutesText });
+      toast.success('Minutes posted!');
+      navigate('/');
+    } catch (err) {
+      toast.error('Failed to post minutes.');
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Write Meeting Minutes</h1>
-      <textarea
-        placeholder="Minutes content..."
-        className="w-full h-60 p-4 border rounded-lg focus:outline-none focus:ring"
-      ></textarea>
-      <button className="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700">
-        Save Minutes
-      </button>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Write Meeting Minutes</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <textarea value={minutesText} onChange={(e) => setMinutesText(e.target.value)} rows={10} className="w-full p-2 border rounded" placeholder="Enter minutes text..." required></textarea>
+        <button type="submit" className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Submit</button>
+      </form>
     </div>
   );
 }
-
-export default WriteMinutesPage;

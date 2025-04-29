@@ -1,31 +1,39 @@
-import * as React from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-function CreatePostPage() {
+export default function CreatePostPage() {
+  const [heading, setHeading] = useState('');
+  const [text, setText] = useState('');
+  const [image, setImage] = useState<File | null>(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('heading', heading);
+    formData.append('text', text);
+    if (image) formData.append('image', image);
+
+    try {
+      await axios.post('/api/posts', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      toast.success('Post created!');
+      navigate('/');
+    } catch (err) {
+      toast.error('Failed to create post.');
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Create a New Post</h1>
-      {/* Heading Input */}
-      <input
-        type="text"
-        placeholder="Post Title"
-        className="w-full p-3 border rounded-lg focus:outline-none focus:ring"
-      />
-      {/* Body Textarea */}
-      <textarea
-        placeholder="Post content..."
-        className="w-full h-40 p-3 border rounded-lg focus:outline-none focus:ring"
-      ></textarea>
-      {/* Image Upload */}
-      <input
-        type="file"
-        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-md file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-      />
-      {/* Submit Button */}
-      <button className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700">
-        Publish
-      </button>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Create New Post</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input value={heading} onChange={(e) => setHeading(e.target.value)} type="text" placeholder="Heading" className="w-full p-2 border rounded" required />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Body Text" rows={8} className="w-full p-2 border rounded" required></textarea>
+        <input type="file" onChange={(e) => e.target.files && setImage(e.target.files[0])} accept="image/*" />
+        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Publish</button>
+      </form>
     </div>
   );
 }
-
-export default CreatePostPage;
