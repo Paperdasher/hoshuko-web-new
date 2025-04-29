@@ -63,14 +63,14 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">
-          {isCreatingAccount ? 'Create Account' : 'Login'}
+          {isCreatingAccount ? 'アカウント作成' : 'ログイン'}
         </h2>
 
         <form onSubmit={isCreatingAccount ? handleSignup : handleLogin} className="space-y-4">
           {/* ID */}
           <input
             type="text"
-            placeholder="6-digit ID"
+            placeholder="6桁 ID"
             value={id}
             onChange={(e) => setId(e.target.value)}
             className="w-full p-2 border rounded"
@@ -81,7 +81,7 @@ export default function LoginPage() {
           {/* Password */}
           <input
             type="password"
-            placeholder="Password"
+            placeholder="パスワード"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 border rounded"
@@ -93,7 +93,7 @@ export default function LoginPage() {
             <>
               <input
                 type="text"
-                placeholder="Name (漢字)"
+                placeholder="名前"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full p-2 border rounded"
@@ -101,7 +101,7 @@ export default function LoginPage() {
               />
               <input
                 type="text"
-                placeholder="Furigana (ふりがな)"
+                placeholder="ふりがな"
                 value={furigana}
                 onChange={(e) => setFurigana(e.target.value)}
                 className="w-full p-2 border rounded"
@@ -109,7 +109,7 @@ export default function LoginPage() {
               />
               <input
                 type="text"
-                placeholder="Romaji Name"
+                placeholder="ローマ字"
                 value={romajiName}
                 onChange={(e) => setRomajiName(e.target.value)}
                 className="w-full p-2 border rounded"
@@ -122,7 +122,7 @@ export default function LoginPage() {
                 className="w-full p-2 border rounded"
                 required
               >
-                <option value="">Select Grade</option>
+                <option value="">学年</option>
                 <option value="中1">中1</option>
                 <option value="中2">中2</option>
                 <option value="中3">中3</option>
@@ -132,7 +132,7 @@ export default function LoginPage() {
 
               <input
                 type="email"
-                placeholder="Email (@nyhoshuko.org)"
+                placeholder="メール(@nyhoshuko.org)"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-2 border rounded"
@@ -145,7 +145,7 @@ export default function LoginPage() {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           >
-            {isCreatingAccount ? 'Create Account' : 'Login'}
+            {isCreatingAccount ? 'アカウント作成' : 'ログイン'}
           </button>
         </form>
 
@@ -153,7 +153,7 @@ export default function LoginPage() {
           onClick={() => setIsCreatingAccount(!isCreatingAccount)}
           className="mt-4 w-full text-blue-600 hover:underline"
         >
-          {isCreatingAccount ? 'Already have an account? Login' : 'Need an account? Create one'}
+          {isCreatingAccount ? 'アカウントをすでに持っている' : 'アカウント新規作成'}
         </button>
       </div>
     </div>
