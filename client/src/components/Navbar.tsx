@@ -27,8 +27,10 @@ export default function Navbar() {
         <Link to="/about" className="hover:underline">About</Link>
         <Link to="/posts" className="hover:underline">Posts</Link>
         <Link to="/minutes" className="hover:underline">Minutes</Link>
-        {user?.role && (
-          <Link to="/gov-portal" className="hover:underline">Gov Portal</Link>
+        {user?.position && (
+          <Link to="/student-gov-portal" className="hover:underline">
+            Gov Portal
+          </Link>
         )}
         <Link to="/elections" className="hover:underline">Elections</Link>
       </div>
