@@ -1,38 +1,24 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
-const JWT_SECRET = 'your_secret_key_here'; // Put in env later
+// Middleware to require authentication
+const requireAuth = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
-// Get all users (admin use)
-router.get('/users', async (req, res) => {
-    try {
-      const users = await User.find();
-      res.json(users);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(401).json({ message: 'Invalid token' });
+    req.userId = decoded.id;
+    next();
   });
-  
+};
 
-// Update a student's government position (admin use)
-router.put('/assign-position/:id', async (req, res) => {
-    const { position } = req.body;
-    
-    try {
-      const user = await User.findByIdAndUpdate(req.params.id, { position }, { new: true });
-      if (!user) return res.status(404).json({ message: 'User not found' });
-  
-      res.json({ message: 'Position assigned', user });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
-  
-
-// Signup route
+// Signup
 router.post('/signup', async (req, res) => {
   const { studentId, password, name, furigana, romajiName, grade, email } = req.body;
 
@@ -53,13 +39,13 @@ router.post('/signup', async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: 'User created' });
+    res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Login route
+// Login
 router.post('/login', async (req, res) => {
   const { studentId, password } = req.body;
 
@@ -72,7 +58,42 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
 
-    res.json({ token, user });
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        studentId: user.studentId,
+        name: user.name,
+        position: user.position,
+        isAdmin: user.isAdmin,
+        grade: user.grade,
+        email: user.email,
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Assign Position
+router.put('/assign-position/:id', requireAuth, async (req, res) => {
+  const { position } = req.body;
+
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { position }, { new: true });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ message: 'Position assigned', user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get All Users
+router.get('/users', requireAuth, async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
